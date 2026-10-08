@@ -94,6 +94,12 @@ NAT Objet :Cisco CLIobject network LAN
  subnet 192.168.1.0 255.255.255.0
  nat (inside, outside) dynamic interface
 
+
+
+
+<img width="689" height="704" alt="image" src="https://github.com/user-attachments/assets/6107d06e-de3e-47b8-83bf-6adb66a341f9" />
+
+
    5. Synthèse Comparée des TechnologiesCaractéristiqueRouteur Cisco 2911 (V1)Pare-feu Cisco ASA 5506-X (V2)PhilosophieRoutage avec filtrage par interface physique 
 Zones logiques (nameif) et niveaux de confiance (0 à 100)  
 Gestion du retour de fluxStateless : règles manuelles obligatoires (established, echo-reply)  
@@ -111,3 +117,8 @@ Gestion du protocole ICMPAutorisé par défaut ou via règles de liste standard 
 
 
 
+
+<img width="2552" height="1395" alt="image" src="https://github.com/user-attachments/assets/9a0f6168-190f-4165-ac2a-5cdfd71016d9" />
+
+[PKT 2.pdf](https://github.com/user-attachments/files/33227182/PKT.2.pdf)
+[PKT.pdf](https://github.com/user-attachments/files/33227176/PKT.pdf)
