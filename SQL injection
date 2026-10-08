@@ -1,0 +1,54 @@
+# [Write-up] Hack The Box - Appointment
+
+Plateforme : Hack The Box (Starting Point - Tier 1)
+Difficulté : Very Easy
+OS :Linux
+Vecteur principal : SQL Injection (Authentication Bypass via Commentaire SQL)
+Classification OWASP : A03:2021 – Injection
+
+
+
+## 1. Contexte & Objectif
+La machine **Appointment** est un lab d'introduction orienté vers la sécurité des applications web. L'objectif est d'identifier les services exposés, 
+de comprendre le fonctionnement d'un formulaire d'authentification web vulnérable et d'exploiter une faille d'injection SQL afin de contourner le mécanisme de connexion pour obtenir le drapeau racine (*Root flag*).
+
+
+
+# 2. Reconnaissance & Énumération
+
+# Scan de ports avec Nmap
+La première phase consiste à cartographier les services en écoute sur la machine cible :
+
+```bash
+nmap -sV -sC -Pn <IP_CIBLE>
+
+En complément, pour cartographier l'arborescence du site web et détecter d'éventuels fichiers ou dossiers cachés, l'outil Gobuster peut être utilisé en mode répertoire j'ai utilisé :
+gobuster dir -u http://<IP_CIBLE> -w /usr/share/wordlists/dirb/common.txt
+
+SELECT * FROM users WHERE username = '$user' AND password = '$password';
+
+En MySQL, le caractère dièse (#) permet de commenter tout le reste d'une ligne de commande SQL.
+
+Si nous injectons la valeur suivante dans le champ username : admin'#
+
+La requête finale interprétée par le moteur de base de données devient :
+
+select * from users where username = 'admin'#' and password = '...';
+Effet de l'injection : Le caractère ' ferme la chaîne attendue pour le nom d'utilisateur, et le dièse # force le moteur SQL à ignorer complètement la condition AND password = '...'.
+
+Résultat : L'application valide l'authentification sans exiger de mot de passe valide pour le compte administrateur.
+
+CORRECTIF 
+// Requête sécurisée avec paramètres nommés
+$stmt = $pdo->prepare('SELECT id, username FROM users WHERE username = :username AND password = :password');
+$stmt->execute([
+    'username' => $input_username,
+    'password' => hash('sha256', $input_password) // Préférer password_verify() avec bcrypt/Argon2
+]);
+
+$user = $stmt->fetch();
+if ($user) {
+    // Connexion autorisée
+} else {
+    // Échec de connexion
+}
